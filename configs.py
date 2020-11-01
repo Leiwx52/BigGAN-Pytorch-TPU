@@ -259,7 +259,7 @@ imagenet_config = {
     'no_fid': True,
     'no_inception': True,
     'load_weights': '',
-    'base_root': './results/',
+    'base_root': './results',
     'weights_root': 'weights/',
     'data_root': '~/nuslsg/Data/imagenet/ILSVRC128.hdf5',
     'logs_root': 'logs/',
