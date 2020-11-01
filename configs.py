@@ -254,7 +254,7 @@ imagenet_config = {
     'num_save_copies': 0,
     'num_best_copies': 5,
     'which_best': 'FID',
-    'resume': True,
+    'resume': False,
      ## testing
     'no_fid': True,
     'no_inception': True,
