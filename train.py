@@ -252,8 +252,8 @@ def run(config):
           break
 
 def main(index):
-  xm.master_print(celeba_config)
-  run(celeba_config)
+  xm.master_print(imagenet_config)
+  run(imagenet_config)
 
 
 if __name__ == '__main__':
