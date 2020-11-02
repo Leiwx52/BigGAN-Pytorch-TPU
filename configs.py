@@ -261,7 +261,7 @@ imagenet_config = {
     'load_weights': '',
     'base_root': './results',
     'weights_root': 'weights/',
-    'data_root': '~/nuslsg/Data/imagenet/ILSVRC128.hdf5',
+    'data_root': '/home/supercomputer_ai/nuslsg/Data/imagenet/ILSVRC128.hdf5',
     'logs_root': 'logs/',
     'samples_root': 'samples/',
     'experiment_name': 'imagenet',
