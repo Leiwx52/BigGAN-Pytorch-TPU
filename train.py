@@ -257,4 +257,4 @@ def main(index):
 
 
 if __name__ == '__main__':
-  xmp.spawn(main, args=(), nprocs=celeba_config['num_devices'])
+  xmp.spawn(main, args=(), nprocs=imagenet_config['num_devices'])
