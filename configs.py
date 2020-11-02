@@ -173,7 +173,7 @@ imagenet_config = {
     'skip_init': True,
 
     ## Optimization
-    'batch_size': 64,
+    'batch_size': 4,
     'G_batch_size': 0,
     'num_G_accumulations': 1,
     'num_D_accumulations': 1,
