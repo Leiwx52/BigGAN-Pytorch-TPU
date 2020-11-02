@@ -141,7 +141,7 @@ imagenet_config = {
     'num_workers': 8,
     'no_pin_memory': True,
     'shuffle': False,
-    'load_in_mem': False,
+    'load_in_mem': True,
     'use_multiepoch_sampler': False,
 
     ## Model
