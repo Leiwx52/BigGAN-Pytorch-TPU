@@ -15,7 +15,7 @@ import utils
 import inception_utils
 from tqdm import tqdm, trange
 from argparse import ArgumentParser
-from configs import celeba_config
+from configs import celeba_config, imagenet_config
 
 # xla imports
 import torch_xla.core.xla_model as xm
@@ -60,6 +60,6 @@ def run(config):
 
 
 if __name__ == '__main__':
-  config = celeba_config
+  config = imagenet_config
   print(config)
   run(config)

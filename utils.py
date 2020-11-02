@@ -548,11 +548,12 @@ def seed_rng(seed):
 
 # Utility to peg all roots to a base root
 # If a base root folder is provided, peg all other root folders to it.
+# *data root* should remain as its original format.
 def update_config_roots(config):
   if config['base_root']:
     xm.master_print('Pegging all root folders to base root %s' % config['base_root'])
-    for key in ['data', 'weights', 'logs', 'samples']:
-      config['%s_root' % key] = '%s/%s' % (config['base_root'], key)
+    for key in [ 'weights', 'logs', 'samples']:
+      config['%s_root' % key] = os.path.join(config['base_root'], key)  #'%s/%s' % (config['base_root'], key)
   return config
 
 

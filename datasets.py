@@ -50,7 +50,7 @@ class ILSVRC_HDF5(data.Dataset):
                val_split=0, **kwargs): # last four are dummies
 
     self.root = root
-    self.num_imgs = len(h5.File('/home/supercomputer_ai/nuslsg/Data/imagenet/ILSVRC128.hdf5', 'r')['labels'])
+    self.num_imgs = len(h5.File(root, 'r')['labels'])
 
     # self.transform = transform
     self.target_transform = target_transform
