@@ -34,10 +34,11 @@ def run(config):
   device = xm.xla_device(devkind='TPU')
   net = net.to(device)
 
-  print(net.device)
+  print(net.parameters()[0].device)
 
   for i, (x, y) in enumerate(tqdm(loader)):
     x = x.to(device)
+    print(x.device)
     with torch.no_grad():
       pool_val, logits_val = net(x)
       pool += [np.asarray(pool_val.cpu())]
