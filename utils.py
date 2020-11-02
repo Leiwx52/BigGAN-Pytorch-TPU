@@ -563,7 +563,7 @@ def prepare_root(config):
     if not os.path.exists(config[key]):
       xm.master_print('Making directory %s for %s...' % (config[key], key))
       try:
-        os.mkdir(config[key])
+        os.makedirs(config[key])
       except:
           pass
 
