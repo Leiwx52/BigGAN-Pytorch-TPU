@@ -34,6 +34,8 @@ def run(config):
   device = xm.xla_device(devkind='TPU')
   net = net.to(device)
 
+  print(net.device)
+
   for i, (x, y) in enumerate(tqdm(loader)):
     x = x.to(device)
     with torch.no_grad():
