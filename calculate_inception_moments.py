@@ -34,7 +34,8 @@ def run(config):
   device = xm.xla_device(devkind='TPU')
   net = net.to(device)
 
-  print(net)
+  for p in net.parameters():
+    print(p)
 
   for i, (x, y) in enumerate(tqdm(loader)):
     x = x.to(device)
