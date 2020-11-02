@@ -304,9 +304,10 @@ def prepare_inception_metrics(dataset, parallel, no_inception=True, no_fid=False
   # Load metrics; this is intentionally not in a try-except loop so that
   # the script will crash here if it cannot find the Inception moments.
   # By default, remove the "hdf5" from dataset
+  root = '/data/'
   dataset = dataset.strip('_hdf5')
-  data_mu = np.load(dataset+'_inception_moments.npz')['mu']
-  data_sigma = np.load(dataset+'_inception_moments.npz')['sigma']
+  data_mu = np.load(root + dataset+'_inception_moments.npz')['mu']
+  data_sigma = np.load(root + dataset+'_inception_moments.npz')['sigma']
   master_log('Loading inception net')
 
   # Load network
