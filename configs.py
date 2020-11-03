@@ -138,14 +138,16 @@ imagenet_config = {
     ## Dataset config
     'dataset': 'imagenet',
     'augment': False,
-    'num_workers': 2,
+    'num_workers': 8,
     'no_pin_memory': True,
     'shuffle': False,
     'load_in_mem': True,
     'use_multiepoch_sampler': False,
 
-    ## Model
     'model': 'BigGAN',
+    'G_attn': '128',
+    'D_attn': '128',
+
     'G_param': 'SN',
     'D_param': 'SN',
     'G_ch': 96,
@@ -153,33 +155,31 @@ imagenet_config = {
     'G_depth': 1,
     'D_depth': 1,
     'D_wide': True,
-    'G_shared': True,
+    'G_shared': False,
     'shared_dim': 128,
     'dim_z': 120,
     'z_var': 1.0,
-    'hier': True,
+    'hier': False,
     'cross_replica': False,
     'G_nl': 'inplace_relu',
     'D_nl': 'inplace_relu',
-    'G_attn': '64',
-    'D_attn': '64',
     'mybn': False,
     'norm_style': 'bn',
 
     ## Initialization
-    'seed': 0,
+    'seed': 11,
     'G_init': 'ortho',
     'D_init': 'ortho',
-    'skip_init': True,
+    'skip_init': False,
 
     ## Optimization
     'batch_size': 4,
     'G_batch_size': 0,
     'num_G_accumulations': 1,
     'num_D_accumulations': 1,
-    'num_D_steps': 1,
-    'G_lr': 1e-4,
-    'D_lr': 4e-4,
+    'num_D_steps': 2,
+    'G_lr': 5e-5,
+    'D_lr': 2e-4,
     'G_B1': 0.,
     'D_B1': 0.,
     'G_B2': 0.999,
@@ -234,6 +234,7 @@ imagenet_config = {
     'sv_log_interval': 10,
     'pbar': 'mine',
     'name_suffix': '',
+
     # SMYRF configuration
     'smyrf': False,
     'clustering_algo': 'lsh',
