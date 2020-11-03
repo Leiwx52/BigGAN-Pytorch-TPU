@@ -27,6 +27,7 @@ def dummy_training_function():
 
 def GAN_training_function(G, D, GD, sample, ema, state_dict, config):
   def train(x, y):
+    xm.mark_step()
     G.optim.zero_grad()
     D.optim.zero_grad()
     # How many chunks to split x and y into?
@@ -41,8 +42,11 @@ def GAN_training_function(G, D, GD, sample, ema, state_dict, config):
 
     for step_index in range(config['num_D_steps']):
       # If accumulating gradients, loop multiple times before an optimizer step
+      xm.mark_step()
       D.optim.zero_grad()
+      
       for accumulation_index in range(config['num_D_accumulations']):
+        xm.mark_step()
         z_, y_ = sample()
         D_fake, D_real = GD(z_[:config['batch_size']], y_[:config['batch_size']],
                             x[counter], y[counter], train_G=False,
@@ -58,6 +62,7 @@ def GAN_training_function(G, D, GD, sample, ema, state_dict, config):
       if config['D_ortho'] > 0.0:
         # Debug print to indicate we're using ortho reg in D.
         xm.master_print('using modified ortho reg in D')
+        xm.mark_step()
         utils.ortho(D, config['D_ortho'])
 
       xm.optimizer_step(D.optim)
@@ -68,10 +73,12 @@ def GAN_training_function(G, D, GD, sample, ema, state_dict, config):
       utils.toggle_grad(G, True)
 
     # Zero G's gradients by default before training G, for safety
+    xm.mark_step()
     G.optim.zero_grad()
 
     # If accumulating gradients, loop multiple times
     for accumulation_index in range(config['num_G_accumulations']):
+      xm.mark_step()
       z_, y_ = sample()
       D_fake = GD(z_, y_, train_G=True, split_D=config['split_D'])
       G_loss = losses.generator_loss(D_fake) / float(config['num_G_accumulations'])
@@ -81,8 +88,10 @@ def GAN_training_function(G, D, GD, sample, ema, state_dict, config):
     if config['G_ortho'] > 0.0:
       print('using modified ortho reg in G') # Debug print to indicate we're using ortho reg in G
       # Don't ortho reg shared, it makes no sense. Really we should blacklist any embeddings for this
+      xm.mark_step()
       utils.ortho(G, config['G_ortho'],
                   blacklist=[param for param in G.shared.parameters()])
+    xm.mark_step()
     xm.optimizer_step(G.optim)
 
     # If we have an ema, update it, regardless of if we test with it or not
