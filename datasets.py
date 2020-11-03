@@ -62,11 +62,11 @@ class ILSVRC_HDF5(data.Dataset):
     self.load_in_mem = load_in_mem
 
     # If loading into memory, do so now
-    if self.load_in_mem:
-      print('Loading %s into memory...' % root)
-      with h5.File(root,'r') as f:
-        self.data = f['imgs'][:]
-        self.labels = f['labels'][:]
+    # if self.load_in_mem:
+    #   print('Loading %s into memory...' % root)
+    #   with h5.File(root,'r') as f:
+    #     self.data = f['imgs'][:]
+    #     self.labels = f['labels'][:]
 
   def __getitem__(self, index):
     """
@@ -76,18 +76,19 @@ class ILSVRC_HDF5(data.Dataset):
         tuple: (image, target) where target is class_index of the target class.
     """
     # If loaded the entire dataset in RAM, get image from memory
-    if self.load_in_mem:
-      img = self.data[index]
-      target = self.labels[index]
+    # if self.load_in_mem:
+    #   img = self.data[index]
+    #   target = self.labels[index]
 
     # Else load it from disk
-    else:
-      with h5.File(self.root,'r') as f:
-        img = f['imgs'][index]
-        target = f['labels'][index]
+    # else:
+    #   with h5.File(self.root,'r') as f:
+    #     img = f['imgs'][index]
+    #     target = f['labels'][index]
 
-    img = ((torch.from_numpy(img).float() / 255) - 0.5) * 2
-
+    # img = ((torch.from_numpy(img).float() / 255) - 0.5) * 2
+    img = torch.randn(3,128,128)
+    target = 1
     if self.target_transform is not None:
       target = self.target_transform(target)
 
