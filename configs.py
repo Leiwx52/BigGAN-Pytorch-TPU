@@ -138,7 +138,7 @@ imagenet_config = {
     ## Dataset config
     'dataset': 'imagenet',
     'augment': False,
-    'num_workers': 8,
+    'num_workers': 2,
     'no_pin_memory': True,
     'shuffle': False,
     'load_in_mem': True,
