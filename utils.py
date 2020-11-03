@@ -512,7 +512,7 @@ class MultiEpochSampler(torch.utils.data.Sampler):
 
 # Convenience function to centralize all data loaders
 def get_data_loaders(dataset, data_root=None, augment=False, batch_size=64,
-                     num_workers=8, shuffle=True, load_in_mem=False,
+                     num_workers=8, shuffle=True, load_in_mem=True,
                      pin_memory=True, drop_last=True, start_itr=0,
                      num_epochs=500, use_multiepoch_sampler=False,
                      **kwargs):

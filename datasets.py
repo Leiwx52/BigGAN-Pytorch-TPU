@@ -45,7 +45,7 @@ class CelebAHQ(data.Dataset):
 '''
 class ILSVRC_HDF5(data.Dataset):
   def __init__(self, root, transform=None, target_transform=None,
-               load_in_mem=False, train=True,
+               load_in_mem=True, train=True,
                download=False, validate_seed=0,
                val_split=0, **kwargs): # last four are dummies
 
