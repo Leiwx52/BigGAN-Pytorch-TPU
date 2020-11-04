@@ -215,9 +215,13 @@ class Generator(nn.Module):
                         which_bn=self.which_bn,
                         activation=self.activation,
                         upsample=(
-                            functools.partial(
-                                F.interpolate,
-                                scale_factor=2) if self.arch['upsample'][index] else None))]]
+                            # functools.partial(
+                            #     F.interpolate,
+                            #     scale_factor=2) if self.arch['upsample'][index] else None
+                            layers.InterpolateNearest2d(scale_factor=2)
+                            )
+                    
+                    )]]
 
             # If attention on this block, attach it to the end
             if self.arch['attention'][self.arch['resolution'][index]]:

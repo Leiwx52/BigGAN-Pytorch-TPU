@@ -1176,6 +1176,7 @@ def prepare_z_y(G_batch_size, dim_z, nclasses, device=None,
                     requires_grad=False).normal_(0, math.sqrt(z_var))
     y = torch.empty(G_batch_size, dtype=torch.int64,
                     requires_grad=False, device=device).random_(nclasses)
+    # y = torch.randint()
     return z, y
 
 

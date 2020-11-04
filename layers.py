@@ -623,4 +623,39 @@ class DBlock(nn.Module):
 
         return h + self.shortcut(x)
 
+class InterpolateNearest2d(nn.Module):
+    """
+    Custom implementation of nn.Upsample because pytroch/xla
+    does not yet support scale_factor and needs to be provided with
+    the output_size
+    Note that this supports for torch_xla 1.6 but not for torch_xla 1.7
+    
+    """
+
+    def __init__(self, scale_factor=2):
+        """
+        Create an InterpolateNearest module
+
+        Args:
+            scale_factor (int, optional): Output size multiplier. Defaults to 2.
+        """
+        super().__init__()
+        self.scale_factor = scale_factor
+
+    def forward(self, x):
+        """
+        Interpolate x in "nearest" mode on its last 2 dimensions
+
+        Args:
+            x (torch.Tensor): input to interpolate
+
+        Returns:
+            torch.Tensor: upsampled tensor with shape
+                (...x.shape, x.shape[-2] * scale_factor, x.shape[-1] * scale_factor)
+        """
+        return nn.functional.interpolate(
+            x,
+            size=(x.shape[-2] * self.scale_factor, x.shape[-1] * self.scale_factor),
+            mode="nearest",
+        )
 # dogball
