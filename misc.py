@@ -27,6 +27,7 @@ if __name__ == "__main__":
     
     if args.random:
         x.random_(100)
+        x.normal_(mean=0, std=0.02)
 
     print(met.metrics_report())
 
