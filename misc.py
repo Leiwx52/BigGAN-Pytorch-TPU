@@ -28,5 +28,5 @@ if __name__ == "__main__":
     if args.random:
         x.random_(100)
 
-    print(met..metrics_report())
+    print(met.metrics_report())
 
