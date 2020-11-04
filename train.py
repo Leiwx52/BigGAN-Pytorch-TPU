@@ -279,8 +279,8 @@ def run(config):
                     get_inception_metrics,
                     experiment_name,
                     test_log)
-            # if True:
-            #     xm.master_print(met.metrics_report())
+            if True:
+                xm.master_print(met.metrics_report())
             if state_dict['itr'] >= config['total_steps']:
                 break
 
