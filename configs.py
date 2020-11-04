@@ -101,7 +101,7 @@ celeba_config = {
     'name_suffix': '',
 
     # SMYRF configuration
-    'smyrf': True,
+    'smyrf': False,
     'clustering_algo': 'lsh',
     'n_hashes': 4,
     'q_cluster_size': 2048,
@@ -237,7 +237,7 @@ imagenet_config = {
     'name_suffix': '',
 
     # SMYRF configuration
-    'smyrf': True,
+    'smyrf': False,
     'clustering_algo': 'lsh',
     'n_hashes': 4,
     'q_cluster_size': 2048,
