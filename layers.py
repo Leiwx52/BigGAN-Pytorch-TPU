@@ -8,7 +8,7 @@ from torch.nn import init
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.nn import Parameter as P
-# from smyrf.torch.attn import SmyrfAttention
+from smyrf.attn import SmyrfAttention
 from sync_batchnorm import SynchronizedBatchNorm2d as SyncBN2d
 
 
@@ -255,14 +255,14 @@ class AttentionApproximation(nn.Module):
         # Learnable gain parameter
         self.gamma = P(torch.tensor(0.), requires_grad=True)
 
-        #  self.smyrf = SmyrfAttention(n_hashes=n_hashes,
-        #                              q_cluster_size=q_cluster_size,
-        #                              k_cluster_size=k_cluster_size,
-        #                              q_attn_size=q_attn_size,
-        #                              k_attn_size=k_attn_size,
-        #                              max_iters=max_iters,
-        #                              clustering_algo=clustering_algo,
-        #                              r=r)
+        self.smyrf = SmyrfAttention(n_hashes=n_hashes,
+                                    q_cluster_size=q_cluster_size,
+                                    k_cluster_size=k_cluster_size,
+                                    q_attn_size=q_attn_size,
+                                    k_attn_size=k_attn_size,
+                                    max_iters=max_iters,
+                                    clustering_algo=clustering_algo,
+                                    r=r)
         self.progress = progress
 
     def forward(self, x, y=None):

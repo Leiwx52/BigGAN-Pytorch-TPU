@@ -144,6 +144,7 @@ imagenet_config = {
     'load_in_mem': True,
     'use_multiepoch_sampler': False,
 
+    ## Model
     'model': 'BigGAN',
     'G_attn': '128',
     'D_attn': '128',
@@ -236,18 +237,18 @@ imagenet_config = {
     'name_suffix': '',
 
     # SMYRF configuration
-    'smyrf': False,
+    'smyrf': True,
     'clustering_algo': 'lsh',
-    'n_hashes': 8,
-    'q_cluster_size': 256,
-    'k_cluster_size': 64,
-    'q_attn_size': 256,
-    'k_attn_size': 64,
+    'n_hashes': 4,
+    'q_cluster_size': 2048,
+    'k_cluster_size': 512,
+    'q_attn_size': 2048,
+    'k_attn_size': 512,
     ## K-means
     'max_iters': 30,
     'progress': False,
     ## LSH
-    'r': 4.0,
+    'r': 4,
     # Checkpointing and testing
     'num_inception_images': 10000,
     'test_every': 999999,
