@@ -75,8 +75,7 @@ class Generator(nn.Module):
             hier=False,
             cross_replica=False,
             mybn=False,
-            G_activation=nn.ReLU(
-                inplace=False),
+            G_activation=nn.ReLU(inplace=False),
             G_lr=5e-5,
             G_B1=0.0,
             G_B2=0.999,
@@ -90,16 +89,6 @@ class Generator(nn.Module):
             no_optim=False,
             G_param='SN',
             norm_style='bn',
-            smyrf=False,
-            n_hashes=8,
-            clustering_algo='lsh',
-            r=1,
-            q_cluster_size=64,
-            k_cluster_size=16,
-            q_attn_size=64,
-            k_attn_size=64,
-            max_iters=10,
-            progress=False,
             **kwargs):
         super(Generator, self).__init__()
         # Channel width mulitplier
@@ -162,15 +151,16 @@ class Generator(nn.Module):
                 padding=1,
                 num_svs=num_G_SVs,
                 num_itrs=num_G_SV_itrs,
-                eps=self.SN_eps)
+                eps=self.SN_eps
+            )
             self.which_linear = functools.partial(
                 layers.SNLinear,
                 num_svs=num_G_SVs,
                 num_itrs=num_G_SV_itrs,
-                eps=self.SN_eps)
+                eps=self.SN_eps
+            )
         else:
-            self.which_conv = functools.partial(
-                nn.Conv2d, kernel_size=3, padding=1)
+            self.which_conv = functools.partial(nn.Conv2d, kernel_size=3, padding=1)
             self.which_linear = nn.Linear
 
         # We use a non-spectral-normed embedding here regardless;
@@ -186,20 +176,21 @@ class Generator(nn.Module):
             mybn=self.mybn,
             input_size=(
                 self.shared_dim +
-                self.z_chunk_size if self.G_shared else self.n_classes),
+                self.z_chunk_size if self.G_shared else self.n_classes
+            ),
             norm_style=self.norm_style,
-            eps=self.BN_eps)
+            eps=self.BN_eps
+        )
 
         # Prepare model
         # If not using shared embeddings, self.shared is just a passthrough
         self.shared = (
-            self.which_embedding(
-                n_classes,
-                self.shared_dim) if G_shared else layers.identity())
+            self.which_embedding(n_classes,self.shared_dim) 
+            if G_shared else layers.identity()
+        )
         # First linear layer
-        self.linear = self.which_linear(self.dim_z //
-                                        self.num_slots, self.arch['in_channels'][0] *
-                                        (self.bottom_width ** 2))
+        self.linear = self.which_linear(self.dim_z // self.num_slots, 
+                                        self.arch['in_channels'][0] * (self.bottom_width ** 2))
 
         # self.blocks is a doubly-nested list of modules, the outer loop intended
         # to be over blocks at a given resolution (resblocks and/or self-attention)
@@ -218,37 +209,24 @@ class Generator(nn.Module):
                             # functools.partial(
                             #     F.interpolate,
                             #     scale_factor=2) if self.arch['upsample'][index] else None
-                            layers.InterpolateNearest2d(scale_factor=2)
-                            )
-                    
-                    )]]
+                            layers.InterpolateNearest2d(scale_factor=2) if self.arch['upsample'][index] else None
+                        )
+                    )
+                ]
+            ]
 
             # If attention on this block, attach it to the end
             if self.arch['attention'][self.arch['resolution'][index]]:
                 xm.master_print(
                     'Adding attention layer in G at resolution %d' %
-                    self.arch['resolution'][index])
-                if smyrf:
-                    xm.master_print('Attention type: SMYRF')
-                    self.blocks[-1] += [layers.AttentionApproximation(self.arch['out_channels'][index],
-                                                                      n_hashes=n_hashes,
-                                                                      clustering_algo=clustering_algo,
-                                                                      q_cluster_size=q_cluster_size,
-                                                                      k_cluster_size=k_cluster_size,
-                                                                      q_attn_size=q_attn_size,
-                                                                      k_attn_size=k_attn_size,
-                                                                      which_conv=self.which_conv,
-                                                                      progress=progress,
-                                                                      max_iters=max_iters,
-                                                                      r=r)]
-                else:
-                    self.blocks[-1] += [layers.Attention(
-                        self.arch['out_channels'][index], self.which_conv)]
+                    self.arch['resolution'][index]
+                )
+                
+                self.blocks[-1] += [layers.Attention(self.arch['out_channels'][index], self.which_conv)]
 
         # Turn self.blocks into a ModuleList so that it's all properly
         # registered.
-        self.blocks = nn.ModuleList([nn.ModuleList(block)
-                                     for block in self.blocks])
+        self.blocks = nn.ModuleList([nn.ModuleList(block) for block in self.blocks])
 
         # output layer: batchnorm-relu-conv.
         # Consider using a non-spectral conv here
@@ -256,7 +234,8 @@ class Generator(nn.Module):
                                                     cross_replica=self.cross_replica,
                                                     mybn=self.mybn),
                                           self.activation,
-                                          self.which_conv(self.arch['out_channels'][-1], 3))
+                                          self.which_conv(self.arch['out_channels'][-1], 3)
+                                        )
 
         # Initialize weights. Optionally skip init for testing.
         if not skip_init:
@@ -301,8 +280,7 @@ class Generator(nn.Module):
                                          for p in module.parameters()])
         xm.master_print(
             'Param count for G'
-            's initialized parameters: %d' %
-            self.param_count)
+            's initialized parameters: %d' %  self.param_count)
 
     # Note on this forward function: we pass in a y vector which has
     # already been passed through G.shared to enable easy class-wise
@@ -392,8 +370,7 @@ class Discriminator(nn.Module):
             n_classes=1,
             num_D_SVs=1,
             num_D_SV_itrs=1,
-            D_activation=nn.ReLU(
-                inplace=False),
+            D_activation=nn.ReLU(inplace=False),
             D_lr=2e-4,
             D_B1=0.0,
             D_B2=0.999,
@@ -405,16 +382,6 @@ class Discriminator(nn.Module):
             D_init='ortho',
             skip_init=False,
             D_param='SN',
-            smyrf=False,
-            n_hashes=8,
-            clustering_algo='lsh',
-            r=1,
-            q_cluster_size=64,
-            k_cluster_size=16,
-            q_attn_size=64,
-            k_attn_size=64,
-            max_iters=10,
-            progress=False,
             **kwargs):
         super(Discriminator, self).__init__()
         # Width multiplier
@@ -451,17 +418,20 @@ class Discriminator(nn.Module):
                 padding=1,
                 num_svs=num_D_SVs,
                 num_itrs=num_D_SV_itrs,
-                eps=self.SN_eps)
+                eps=self.SN_eps
+            )
             self.which_linear = functools.partial(
                 layers.SNLinear,
                 num_svs=num_D_SVs,
                 num_itrs=num_D_SV_itrs,
-                eps=self.SN_eps)
+                eps=self.SN_eps
+            )
             self.which_embedding = functools.partial(
                 layers.SNEmbedding,
                 num_svs=num_D_SVs,
                 num_itrs=num_D_SV_itrs,
-                eps=self.SN_eps)
+                eps=self.SN_eps
+            )
         # Prepare model
         # self.blocks is a doubly-nested list of modules, the outer loop intended
         # to be over blocks at a given resolution (resblocks and/or
@@ -476,31 +446,19 @@ class Discriminator(nn.Module):
                         which_conv=self.which_conv,
                         wide=self.D_wide,
                         activation=self.activation,
-                        preactivation=(
-                            index > 0),
-                        downsample=(
-                            nn.AvgPool2d(2) if self.arch['downsample'][index] else None))]]
+                        preactivation=(index > 0),
+                        downsample=(nn.AvgPool2d(2) if self.arch['downsample'][index] else None)
+                    )
+                ]
+            ]
             # If attention on this block, attach it to the end
             if self.arch['attention'][self.arch['resolution'][index]]:
                 xm.master_print(
                     'Adding attention layer in D at resolution %d' %
                     self.arch['resolution'][index])
-                if smyrf:
-                    xm.master_print('Attention type: SMYRF')
-                    self.blocks[-1] += [layers.AttentionApproximation(self.arch['out_channels'][index],
-                                                                      n_hashes=n_hashes,
-                                                                      clustering_algo=clustering_algo,
-                                                                      q_cluster_size=q_cluster_size,
-                                                                      k_cluster_size=k_cluster_size,
-                                                                      q_attn_size=q_attn_size,
-                                                                      k_attn_size=k_attn_size,
-                                                                      which_conv=self.which_conv,
-                                                                      progress=progress,
-                                                                      max_iters=max_iters,
-                                                                      r=r)]
-                else:
-                    self.blocks[-1] += [layers.Attention(
-                        self.arch['out_channels'][index], self.which_conv)]
+
+                self.blocks[-1] += [layers.Attention(
+                    self.arch['out_channels'][index], self.which_conv)]
         # Turn self.blocks into a ModuleList so that it's all properly
         # registered.
         self.blocks = nn.ModuleList([nn.ModuleList(block)
@@ -620,8 +578,7 @@ class G_D(nn.Module):
 
             if x is not None:
                 return torch.split(
-                    D_out, [
-                        G_z.shape[0], x.shape[0]])  # D_fake, D_real
+                    D_out, [G_z.shape[0], x.shape[0]])  # D_fake, D_real
             else:
                 if return_G_z:
                     return D_out, G_z
