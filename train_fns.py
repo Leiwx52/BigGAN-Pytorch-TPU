@@ -126,12 +126,10 @@ def save_and_sample(G, D, G_ema, sample, fixed_z, fixed_y,
                            experiment_name,
                            'copy%d' % state_dict['save_num'],
                            G_ema if config['ema'] else None)
-        state_dict['save_num'] = (
-            state_dict['save_num'] + 1) % config['num_save_copies']
+        state_dict['save_num'] = (state_dict['save_num'] + 1) % config['num_save_copies']
 
     # Use EMA G for samples or non-EMA?
-    which_G = G_ema if config['ema'] and config['use_ema'] and (
-        state_dict['itr'] > config['ema_start']) else G
+    which_G = G_ema if config['ema'] and config['use_ema'] and (state_dict['itr'] > config['ema_start']) else G
 
     # Accumulate standing statistics?
     if config['accumulate_stats']:
@@ -144,7 +142,7 @@ def save_and_sample(G, D, G_ema, sample, fixed_z, fixed_y,
         fixed_Gz = which_G(fixed_z, which_G.shared(fixed_y))
     if not os.path.isdir('%s/%s' % (config['samples_root'], experiment_name)):
         try:
-            os.mkdir('%s/%s' % (config['samples_root'], experiment_name))
+            os.makedirs('%s/%s' % (config['samples_root'], experiment_name))
         except BaseException:
             pass
     image_filename = '%s/%s/fixed_samples%d.jpg' % (config['samples_root'],
@@ -202,8 +200,7 @@ def test(
             config['num_standing_accumulations']
         )
 
-    IS_mean, IS_std, FID = get_inception_metrics(
-        model_sample, config['num_inception_images'], num_splits=10)
+    IS_mean, IS_std, FID = get_inception_metrics(model_sample, config['num_inception_images'], num_splits=10)
 
     master_log(
         'Itr %d: PYTORCH UNOFFICIAL Inception Score is %3.3f +/- %3.3f, PYTORCH UNOFFICIAL FID is %5.4f' %
@@ -212,6 +209,10 @@ def test(
     # If improved over previous best metric, save approrpiate copy
     if ((config['which_best'] == 'IS' and IS_mean > state_dict['best_IS']) or (
             config['which_best'] == 'FID' and FID < state_dict['best_FID'])):
+        
+        state_dict['best_IS'] = max(state_dict['best_IS'], IS_mean)
+        state_dict['best_FID'] = min(state_dict['best_FID'], FID)
+        
         master_log(
             '%s improved over previous best, saving checkpoint...' %
             config['which_best'])
@@ -228,8 +229,6 @@ def test(
 
         state_dict['save_best_num'] = (state_dict['save_best_num'] + 1) % config['num_best_copies']
     
-    state_dict['best_IS'] = max(state_dict['best_IS'], IS_mean)
-    state_dict['best_FID'] = min(state_dict['best_FID'], FID)
 
     if xm.is_master_ordinal():
         # Log results to file

@@ -681,7 +681,7 @@ def save_weights(G, D, state_dict, weights_root, experiment_name,
                  name_suffix=None, G_ema=None):
     root = '/'.join([weights_root, experiment_name])
     try:
-        os.mkdir(root)
+        os.makedirs(root)
     except BaseException:
         pass
 
@@ -793,7 +793,7 @@ class MyLogger(object):
     def __init__(self, fname, reinitialize=False, logstyle='%3.3f'):
         self.root = fname
         if not os.path.exists(self.root):
-            os.mkdir(self.root)
+            os.makedirs(self.root)
         self.reinitialize = reinitialize
         self.metrics = []
         self.logstyle = logstyle  # One of '%3.3f' or like '%3.3e'
@@ -916,11 +916,11 @@ def sample_sheet(
         z_=None):
     # Prepare sample directory
     try:
-        os.mkdir('%s/%s' % (samples_root, experiment_name))
+        os.makedirs('%s/%s' % (samples_root, experiment_name))
     except BaseException:
         pass
     try:
-        os.mkdir('%s/%s/%d' % (samples_root, experiment_name, folder_number))
+        os.makedirs('%s/%s/%d' % (samples_root, experiment_name, folder_number))
     except BaseException:
         pass
     device = xm.xla_device(devkind='TPU')
@@ -964,11 +964,11 @@ def interp_sheet(G, num_per_sheet, num_midpoints, num_classes, parallel,
                  fix_z=False, fix_y=False, device=None):
     # Prepare sample directory
     try:
-        os.mkdir('%s/%s' % (samples_root, experiment_name))
+        os.makedirs('%s/%s' % (samples_root, experiment_name))
     except BaseException:
         pass
     try:
-        os.mkdir('%s/%s/%d' % (samples_root, experiment_name, folder_number))
+        os.makedirs('%s/%s/%d' % (samples_root, experiment_name, folder_number))
     except BaseException:
         pass
 

@@ -234,9 +234,11 @@ def run(config):
             # train_log.log(itr=int(state_dict['itr']), **metrics)
 
             # Every sv_log_interval, log singular values
-            # if ((config['sv_log_interval'] > 0) and (not (state_dict['itr'] % config['sv_log_interval']))) and xm.is_master_ordinal():
-            # train_log.log(itr=int(state_dict['itr']),
-            #             **{**utils.get_SVs(G, 'G'), **utils.get_SVs(D, 'D')})
+            if ((config['sv_log_interval'] > 0) and (not (state_dict['itr'] % config['sv_log_interval']))) :
+                if xm.is_master_ordinal():
+                    train_log.log(itr=int(state_dict['itr']),
+                        **{**utils.get_SVs(G, 'G'), **utils.get_SVs(D, 'D')})
+                xm.rendezvous('Log SVs.')
 
             # Save weights and copies as configured at specified interval
             if (not (state_dict['itr'] % config['save_every'])):
