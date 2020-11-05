@@ -1,17 +1,15 @@
 import torch
 import torch.nn as nn
 from torch.nn import init
-from torch.nn.functional import upsample
 import torch.optim as optim
 import torch.nn.functional as F
-from torch.nn import Parameter as P
+
 
 # xla imports
 import torch_xla.core.xla_model as xm
 import torch_xla.distributed.data_parallel as dp
 import torch_xla.debug.metrics as met
-import torch_xla.distributed.xla_multiprocessing as xmp
-import torch_xla.distributed.parallel_loader as pl
+
 from argparse import ArgumentParser
 
 class InterpolateNearest2d(nn.Module):
@@ -59,10 +57,13 @@ if __name__ == "__main__":
     
     if args.upsample:
         o = upsample(x)
+        # o = F.interpolate(x, scale_factor=2)
     
     if args.random:
         x.random_(100)
-        x.normal_(mean=0, std=0.02)
-    torch.normal
+        
+        # torch.randint callsback `aten::random_`, too 
+        # x = torch.randint(0,10,(20,)device=device)
+
     print(met.metrics_report())
 
