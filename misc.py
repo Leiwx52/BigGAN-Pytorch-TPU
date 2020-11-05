@@ -53,6 +53,7 @@ if __name__ == "__main__":
 
     device = xm.xla_device()
     x = torch.randn(2,3,128,128, device=device)
+    y = torch.randint(2,5,(12,),device=device)
     upsample = InterpolateNearest2d(scale_factor=2)
     
     if args.upsample:
