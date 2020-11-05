@@ -100,19 +100,6 @@ celeba_config = {
     'pbar': 'mine',
     'name_suffix': '',
 
-    # SMYRF configuration
-    'smyrf': False,
-    'clustering_algo': 'lsh',
-    'n_hashes': 4,
-    'q_cluster_size': 2048,
-    'k_cluster_size': 512,
-    'q_attn_size': 2048,
-    'k_attn_size': 512,
-    ## K-means
-    'max_iters': 30,
-    'progress': False,
-    ## LSH
-    'r': 4,
     # Checkpointing and testing
     'num_inception_images': 1000,
     'test_every': 1000000,
@@ -236,19 +223,6 @@ imagenet_config = {
     'pbar': 'mine',
     'name_suffix': '',
 
-    # SMYRF configuration
-    'smyrf': False,
-    'clustering_algo': 'lsh',
-    'n_hashes': 4,
-    'q_cluster_size': 2048,
-    'k_cluster_size': 512,
-    'q_attn_size': 2048,
-    'k_attn_size': 512,
-    ## K-means
-    'max_iters': 30,
-    'progress': False,
-    ## LSH
-    'r': 4,
     # Checkpointing and testing
     'num_inception_images': 10000,
     'test_every': 999999,

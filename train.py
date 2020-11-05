@@ -288,8 +288,9 @@ def run(config):
 
 
 def main(index):
-    xm.master_print(imagenet_config)
-    run(imagenet_config)
+    import Configs.I128_BigGAN_bs256x8 as cfg
+    xm.master_print(cfg.config)
+    run(cfg.config)
 
 
 if __name__ == '__main__':
