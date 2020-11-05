@@ -377,7 +377,7 @@ class ccbn(nn.Module):
                     None,
                     None,
                     self.training,
-                    0.1,
+                    self.momentum,
                     self.eps)
             elif self.norm_style == 'in':
                 out = F.instance_norm(
@@ -387,7 +387,7 @@ class ccbn(nn.Module):
                     None,
                     None,
                     self.training,
-                    0.1,
+                    self.momentum,
                     self.eps)
             elif self.norm_style == 'gn':
                 out = groupnorm(x, self.normstyle)
