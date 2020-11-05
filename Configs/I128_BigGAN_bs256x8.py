@@ -37,10 +37,10 @@ config = {
     'skip_init': False,
 
     ## Optimization
-    'batch_size': 32,
+    'batch_size': 16,
     'G_batch_size': 0,
-    'num_G_accumulations': 8,
-    'num_D_accumulations': 8,
+    'num_G_accumulations': 16,
+    'num_D_accumulations': 16,
     'num_D_steps': 1,
     'G_lr': 1e-4,
     'D_lr': 4e-4,
