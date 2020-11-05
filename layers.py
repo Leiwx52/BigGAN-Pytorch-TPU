@@ -8,7 +8,6 @@ from torch.nn import init
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.nn import Parameter as P
-from smyrf.attn import SmyrfAttention
 from sync_batchnorm import SynchronizedBatchNorm2d as SyncBN2d
 
 
@@ -210,79 +209,6 @@ class Attention(nn.Module):
         o = self.o(torch.bmm(g, beta.transpose(1, 2)).view(-1,
                                                            self.ch // 2, x.shape[2], x.shape[3]))
         return self.gamma * o + x
-
-
-class AttentionApproximation(nn.Module):
-    def __init__(self, ch, n_hashes, q_cluster_size, k_cluster_size,
-                 q_attn_size=None, k_attn_size=None, max_iters=10,
-                 r=1, clustering_algo='lsh',
-                 progress=False, which_conv=SNConv2d, name='attention'):
-        '''
-           SmyrfAttention for BigGAN.
-        '''
-        super(AttentionApproximation, self).__init__()
-        # Channel multiplier
-        self.ch = ch
-        self.which_conv = which_conv
-
-        # queries
-        self.theta = self.which_conv(
-            self.ch,
-            self.ch // 8,
-            kernel_size=1,
-            padding=0,
-            bias=False)
-
-        # keys
-        self.phi = self.which_conv(
-            self.ch,
-            self.ch // 8,
-            kernel_size=1,
-            padding=0,
-            bias=False)
-        self.g = self.which_conv(
-            self.ch,
-            self.ch // 2,
-            kernel_size=1,
-            padding=0,
-            bias=False)
-        self.o = self.which_conv(
-            self.ch // 2,
-            self.ch,
-            kernel_size=1,
-            padding=0,
-            bias=False)
-        # Learnable gain parameter
-        self.gamma = P(torch.tensor(0.), requires_grad=True)
-
-        self.smyrf = SmyrfAttention(n_hashes=n_hashes,
-                                    q_cluster_size=q_cluster_size,
-                                    k_cluster_size=k_cluster_size,
-                                    q_attn_size=q_attn_size,
-                                    k_attn_size=k_attn_size,
-                                    max_iters=max_iters,
-                                    clustering_algo=clustering_algo,
-                                    r=r)
-        self.progress = progress
-
-    def forward(self, x, y=None):
-        # Apply convs
-        queries = self.theta(x)
-        keys = F.max_pool2d(self.phi(x), [2, 2])
-        values = F.max_pool2d(self.g(x), [2, 2])
-
-        # Perform reshapes
-        queries = queries.view(-1, self. ch // 8,
-                               x.shape[2] * x.shape[3]).transpose(-2, -1)
-        keys = keys.view(-1, self. ch // 8,
-                         x.shape[2] * x.shape[3] // 4).transpose(-2, -1)
-        values = values.view(-1, self. ch // 2,
-                             x.shape[2] * x.shape[3] // 4).transpose(-2, -1)
-        out = self.smyrf(queries, keys, values,
-                         progress=self.progress).transpose(-2, -1)
-        o = self.o(out.reshape(x.shape[0], -1, x.shape[2], x.shape[3]))
-        return self.gamma * o + x
-
 
 # Fused batchnorm op
 def fused_bn(x, mean, var, gain=None, bias=None, eps=1e-5):
