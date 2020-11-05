@@ -3,7 +3,7 @@ config = {
     'augment': False,
     'num_workers': 8,
     'no_pin_memory': True,
-    'shuffle': True,
+    'shuffle': False,
     'load_in_mem': False,
     'use_multiepoch_sampler': False,
 
