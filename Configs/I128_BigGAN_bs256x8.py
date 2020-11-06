@@ -37,7 +37,7 @@ config = {
     'skip_init': False,
 
     ## Optimization
-    'batch_size': 64,
+    'batch_size': 128,
     'G_batch_size': 0,
     'num_G_accumulations': 1,
     'num_D_accumulations': 1,
