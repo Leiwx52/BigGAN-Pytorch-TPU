@@ -58,7 +58,7 @@ if __name__ == "__main__":
     
     if args.upsample:
         o = upsample(x)
-        # o = F.interpolate(x, scale_factor=2)
+        o = F.interpolate(x, scale_factor=2)
     
     if args.random:
         x.random_(100)
