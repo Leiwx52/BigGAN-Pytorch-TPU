@@ -39,8 +39,8 @@ config = {
     ## Optimization
     'batch_size': 8,
     'G_batch_size': 0,
-    'num_G_accumulations': 32,
-    'num_D_accumulations': 32,
+    'num_G_accumulations': 1,
+    'num_D_accumulations': 1,
     'num_D_steps': 1,
     'G_lr': 1e-4,
     'D_lr': 4e-4,
