@@ -283,8 +283,8 @@ def run(config):
                     test_log)
             
             # Debug : Message print
-            if True:
-                xm.master_print(met.metrics_report())
+            # if True:
+            #     xm.master_print(met.metrics_report())
 
             if state_dict['itr'] >= config['total_steps']:
                 break
