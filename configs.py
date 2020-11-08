@@ -40,8 +40,8 @@ celeba_config = {
     ## Optimization
     'batch_size': 4,
     'G_batch_size': 0,
-    'num_G_accumulations': 1,
-    'num_D_accumulations': 1,
+    'num_G_accumulations': 2,
+    'num_D_accumulations': 2,
     'num_D_steps': 2,
     'G_lr': 5e-5,
     'D_lr': 2e-4,
